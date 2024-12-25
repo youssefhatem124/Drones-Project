@@ -52,7 +52,6 @@ class DroneControllerTest {
 
     @Test
     void registerDrone_WithInvalidDroneModel_ReturnsError() throws Exception {
-        // Arrange
         String invalidPayload = """
                 {
                     "batteryCapacity": 100,
@@ -63,15 +62,34 @@ class DroneControllerTest {
                 }
                 """;
 
-        // Act
         MvcResult result = mockMvc.perform(post("/api/drones")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(invalidPayload))
                 .andExpect(status().isBadRequest())
                 .andReturn();
-        // Assert
         String response = result.getResponse().getContentAsString();
         assertTrue(response.contains("Invalid value provided for DroneModel"));
+    }
+
+    @Test
+    void registerDrone_WithInvalidDroneState_ReturnsError() throws Exception {
+        String invalidPayload = """
+                {
+                    "batteryCapacity": 100,
+                    "serialNumber":"SERIAL1",
+                    "state": "INVALID",
+                    "weightLimit": "500",
+                    "model": "Lightweight"
+                }
+                """;
+
+        MvcResult result = mockMvc.perform(post("/api/drones")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(invalidPayload))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+        String response = result.getResponse().getContentAsString();
+        assertTrue(response.contains("Invalid value provided for DroneState"));
     }
 
     @Test

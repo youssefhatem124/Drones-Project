@@ -70,7 +70,6 @@ class DroneServiceTest {
 
         Assertions.assertThrows(ValidationException.class, () ->
                 droneService.loadDrone(1L, List.of(medicationDTO)));
-
     }
 
     @Test
