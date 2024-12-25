@@ -1,6 +1,6 @@
 package com.dronedelivery.service;
 
-import com.dronedelivery.model.BatteryLog;
+import com.dronedelivery.dto.BatteryLog;
 import com.dronedelivery.repository.BatteryLogRepository;
 import com.dronedelivery.repository.DroneRepository;
 import org.springframework.scheduling.annotation.Scheduled;

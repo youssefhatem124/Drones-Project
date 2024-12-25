@@ -1,8 +1,9 @@
 package com.dronedelivery.config;
 
+import com.dronedelivery.dto.DroneDTO;
+import com.dronedelivery.common.enums.DroneModel;
+import com.dronedelivery.common.enums.DroneState;
 import com.dronedelivery.model.Drone;
-import com.dronedelivery.model.DroneModel;
-import com.dronedelivery.model.DroneState;
 import com.dronedelivery.repository.DroneRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;

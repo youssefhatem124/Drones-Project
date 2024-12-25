@@ -1,15 +1,21 @@
 package com.dronedelivery.service;
 
+import com.dronedelivery.exception.DroneNotFoundException;
+import com.dronedelivery.exception.ValidationException;
+import com.dronedelivery.dto.DroneDTO;
+import com.dronedelivery.dto.MedicationDTO;
+import com.dronedelivery.mapper.DroneMapper;
+import com.dronedelivery.mapper.MedicationMapper;
 import com.dronedelivery.model.Drone;
-import com.dronedelivery.model.DroneState;
 import com.dronedelivery.model.Medication;
 import com.dronedelivery.repository.DroneRepository;
 import com.dronedelivery.repository.MedicationRepository;
-import jakarta.validation.ValidationException;
+import com.dronedelivery.common.enums.DroneState;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DroneService {
@@ -21,62 +27,71 @@ public class DroneService {
         this.medicationRepository = medicationRepository;
     }
 
-    public Drone registerDrone(Drone drone) {
-        return droneRepository.save(drone);
+    public DroneDTO registerDrone(DroneDTO inputDrone) {
+        // Convert DTO to entity, save it, and convert the saved entity back to DTO
+        Drone drone = DroneMapper.INSTANCE.toEntity(inputDrone);
+        Drone savedDrone = droneRepository.save(drone);
+        return DroneMapper.INSTANCE.entityToDTO(savedDrone);
     }
 
     @Transactional
-    public Drone loadDrone(Long droneId, List<Medication> newMedications) {
-        // Retrieve the drone by ID or throw an exception if not found
+    public DroneDTO loadDrone(Long droneId, List<MedicationDTO> newMedications) {
+        // Retrieve the drone entity or throw an exception if not found
         Drone drone = droneRepository.findById(droneId)
-                .orElseThrow(() -> new RuntimeException("Drone not found"));
-
+                .orElseThrow(() -> new DroneNotFoundException("Drone not found"));
         // Check if the drone's battery capacity is above the threshold
         if (drone.getBatteryCapacity() < 25) {
             throw new ValidationException("Cannot load drone: battery level below 25%");
         }
+        if (drone.getState() != DroneState.IDLE) {
+            throw new ValidationException("Drone is not available for loading");
+        }
 
-        // Retrieve the medications already loaded on the drone
-        List<Medication> existingMedications = medicationRepository.findByDroneId(droneId);
+        // Retrieve existing medications already loaded on the drone
 
-        // Calculate the total weight of already loaded medications
-        double existingWeight = existingMedications.stream()
-                .mapToDouble(Medication::getWeight)
-                .sum();
-
-        // Calculate the total weight of new medications
+        // Calculate the total weight of existing and new medications
         double newWeight = newMedications.stream()
-                .mapToDouble(Medication::getWeight)
+                .mapToDouble(MedicationDTO::getWeight)
                 .sum();
 
-        // Ensure the total weight (existing + new) does not exceed the drone's weight limit
-        if (existingWeight + newWeight > drone.getWeightLimit()) {
+        if ( newWeight > drone.getWeightLimit()) {
             throw new ValidationException("Total weight exceeds drone capacity");
         }
 
-        // Set the drone's state to LOADING
+        // Update drone state to LOADING
         drone.setState(DroneState.LOADING);
 
-        // Associate new medications with the drone and save them
-        newMedications.forEach(med -> med.setDrone(drone));
-        medicationRepository.saveAll(newMedications);
+        // Convert new medications from DTO to entity, set their drone, and save them
+        List<Medication> medicationsToSave = newMedications.stream()
+                .map(MedicationMapper.INSTANCE::toEntity)
+                .peek(medication -> medication.setDrone(drone))
+                .collect(Collectors.toList());
+        medicationRepository.saveAll(medicationsToSave);
 
-        // Update the drone's state to LOADED and save the drone
+        // Update drone state to LOADED and save it
         drone.setState(DroneState.LOADED);
-        return droneRepository.save(drone);
+        Drone updatedDrone = droneRepository.save(drone);
+        return DroneMapper.INSTANCE.entityToDTO(updatedDrone);
     }
 
-    public List<Medication> getLoadedMedications(Long droneId) {
-        return medicationRepository.findByDroneId(droneId);
+    public List<MedicationDTO> getLoadedMedications(Long droneId) {
+        // Retrieve medications by drone ID, convert them to DTOs, and return
+        return medicationRepository.findByDroneId(droneId).stream()
+                .map(MedicationMapper.INSTANCE::toDTO)
+                .collect(Collectors.toList());
     }
 
-    public List<Drone> getAvailableDrones() {
-        return droneRepository.findByBatteryCapacityGreaterThanAndState(25, DroneState.IDLE);
+    public List<DroneDTO> getAvailableDrones() {
+        // Retrieve drones that meet the criteria, convert them to DTOs, and return
+        return droneRepository.findByBatteryCapacityGreaterThanAndState(25, DroneState.IDLE).stream()
+                .map(DroneMapper.INSTANCE::entityToDTO)
+                .collect(Collectors.toList());
     }
 
     public Integer getDroneBatteryLevel(Long droneId) {
+        // Retrieve the drone by ID and return its battery capacity
         return droneRepository.findById(droneId)
                 .map(Drone::getBatteryCapacity)
-                .orElseThrow(() -> new RuntimeException("Drone not found"));
+                .orElseThrow(() -> new DroneNotFoundException("Drone not found"));
     }
 }

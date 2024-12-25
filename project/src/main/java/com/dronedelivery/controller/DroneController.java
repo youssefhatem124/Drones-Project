@@ -1,5 +1,7 @@
 package com.dronedelivery.controller;
 
+import com.dronedelivery.dto.DroneDTO;
+import com.dronedelivery.dto.MedicationDTO;
 import com.dronedelivery.model.Drone;
 import com.dronedelivery.model.Medication;
 import com.dronedelivery.service.DroneService;
@@ -19,24 +21,24 @@ public class DroneController {
     }
 
     @PostMapping
-    public ResponseEntity<Drone> registerDrone(@Valid @RequestBody Drone drone) {
+    public ResponseEntity<DroneDTO> registerDrone(@Valid @RequestBody DroneDTO drone) {
         return ResponseEntity.ok(droneService.registerDrone(drone));
     }
 
     @PostMapping("/{droneId}/load")
-    public ResponseEntity<Drone> loadDrone(
+    public ResponseEntity<DroneDTO> loadDrone(
             @PathVariable Long droneId,
-            @Valid @RequestBody List<Medication> medications) {
+            @Valid @RequestBody List<MedicationDTO> medications) {
         return ResponseEntity.ok(droneService.loadDrone(droneId, medications));
     }
 
     @GetMapping("/{droneId}/medications")
-    public ResponseEntity<List<Medication>> getLoadedMedications(@PathVariable Long droneId) {
+    public ResponseEntity<List<MedicationDTO>> getLoadedMedications(@PathVariable Long droneId) {
         return ResponseEntity.ok(droneService.getLoadedMedications(droneId));
     }
 
     @GetMapping("/available")
-    public ResponseEntity<List<Drone>> getAvailableDrones() {
+    public ResponseEntity<List<DroneDTO>> getAvailableDrones() {
         return ResponseEntity.ok(droneService.getAvailableDrones());
     }
 

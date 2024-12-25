@@ -1,7 +1,8 @@
 package com.dronedelivery.repository;
 
+import com.dronedelivery.dto.DroneDTO;
+import com.dronedelivery.common.enums.DroneState;
 import com.dronedelivery.model.Drone;
-import com.dronedelivery.model.DroneState;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
