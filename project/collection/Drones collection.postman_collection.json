@@ -1,0 +1,118 @@
+{
+	"info": {
+		"_postman_id": "8000ab85-caa5-4964-8dd0-796c49ecc13e",
+		"name": "Drones collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11352857"
+	},
+	"item": [
+		{
+			"name": "Get Available Drones",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Add drone",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"serialNumber\": \"SN123456\",\r\n    \"model\": \"Lightweight\",\r\n    \"weightLimit\": 500,\r\n    \"batteryCapacity\": 100,\r\n    \"state\": \"IDLE\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/drones",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"drones"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "load drone",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"name\": \"Paracetamol\",\r\n        \"weight\": 501,\r\n        \"code\": \"MED001\",\r\n        \"image\": \"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wIAAgEBAfgKB3oAAAAASUVORK5CYII=\"\r\n    },\r\n    {\r\n        \"name\": \"Ibuprofen\",\r\n        \"weight\": 20,\r\n        \"code\": \"MED002\",\r\n        \"image\": \"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wIAAgEBAfgKB3oAAAAASUVORK5CYII=\"\r\n    }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/drones/1/load",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"drones",
+						"1",
+						"load"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "check drone battery",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/drones/1/battery",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"drones",
+						"1",
+						"battery"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Drone Medications",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/drones/1/medications",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"drones",
+						"1",
+						"medications"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
