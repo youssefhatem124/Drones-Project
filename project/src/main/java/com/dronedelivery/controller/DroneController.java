@@ -2,8 +2,6 @@ package com.dronedelivery.controller;
 
 import com.dronedelivery.dto.DroneDTO;
 import com.dronedelivery.dto.MedicationDTO;
-import com.dronedelivery.model.Drone;
-import com.dronedelivery.model.Medication;
 import com.dronedelivery.service.DroneService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;

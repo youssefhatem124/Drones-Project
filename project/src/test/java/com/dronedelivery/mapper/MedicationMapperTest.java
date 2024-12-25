@@ -12,11 +12,10 @@ class MedicationMapperTest {
 
     @Test
     void toDTO_ShouldMapEntityToDTO() {
-        // Arrange
         Medication medication = TestUtil.getMedication();
-        // Act
+
         MedicationDTO medicationDTO = medicationMapper.toDTO(medication);
-        // Assert
+
         assertNotNull(medicationDTO);
         assertEquals(medication.getId(), medicationDTO.getId());
         assertEquals(medication.getName(), medicationDTO.getName());
@@ -27,20 +26,17 @@ class MedicationMapperTest {
 
     @Test
     void toDTO_ShouldReturnNull_WhenEntityIsNull() {
-        // Act
         MedicationDTO medicationDTO = medicationMapper.toDTO(null);
-        // Assert
+
         assertNull(medicationDTO);
     }
 
     @Test
     void toEntity_ShouldMapDTOToEntity() {
-        // Arrange
         MedicationDTO medicationDTO = TestUtil.getMedicationDto();
-        // Act
+
         Medication medication = medicationMapper.toEntity(medicationDTO);
 
-        // Assert
         assertNotNull(medication);
         assertEquals(medicationDTO.getId(), medication.getId());
         assertEquals(medicationDTO.getName(), medication.getName());
@@ -51,10 +47,8 @@ class MedicationMapperTest {
 
     @Test
     void toEntity_ShouldReturnNull_WhenDTOIsNull() {
-        // Act
         Medication medication = medicationMapper.toEntity(null);
 
-        // Assert
         assertNull(medication);
     }
 }

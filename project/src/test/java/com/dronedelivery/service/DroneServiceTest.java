@@ -37,14 +37,11 @@ class DroneServiceTest {
         Drone drone = TestUtil.getDrone();
         when(droneRepository.save(drone)).thenReturn(drone);
 
-        // Act
         DroneDTO result = droneService.registerDrone(droneDTO);
 
-        // Assert
         assertNotNull(result);
         assertEquals(droneDTO.getModel(), result.getModel());
         assertEquals(droneDTO.getWeightLimit(), result.getWeightLimit());
-
     }
 
     @Test
@@ -53,6 +50,7 @@ class DroneServiceTest {
         MedicationDTO medicationDTO = TestUtil.getMedicationDto();
         when(droneRepository.findById(anyLong())).thenReturn(Optional.of(drone));
         when(droneRepository.save(any(Drone.class))).thenReturn(drone);
+
         DroneDTO loadedDrone = droneService.loadDrone(1L, List.of(medicationDTO));
 
         assertEquals(DroneState.LOADED, loadedDrone.getState());
@@ -88,7 +86,6 @@ class DroneServiceTest {
     @Test
     void getLoadedMedications_ShouldReturnMedications() {
         Medication medication = TestUtil.getMedication();
-        MedicationDTO medicationDTO = TestUtil.getMedicationDto();
         when(medicationRepository.findByDroneId(anyLong())).thenReturn(List.of(medication));
 
         List<MedicationDTO> medications = droneService.getLoadedMedications(1L);

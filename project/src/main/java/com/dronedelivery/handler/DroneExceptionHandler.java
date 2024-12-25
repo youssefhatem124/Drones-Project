@@ -33,19 +33,16 @@ public class DroneExceptionHandler {
     public ResponseEntity<String> handleJsonParseErrors(HttpMessageNotReadableException ex) {
         String message = ex.getMessage();
 
-        // Check for DroneState enum-related errors
         if (message != null && message.contains("com.dronedelivery.common.enums.DroneState")) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Invalid value provided for DroneState. Accepted values are: IDLE, LOADING, LOADED, DELIVERING, DELIVERED, RETURNING");
         }
 
-        // Check for DroneModel enum-related errors
         if (message != null && message.contains("com.dronedelivery.common.enums.DroneModel")) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Invalid value provided for DroneModel. Accepted values are: Lightweight, Middleweight, Cruiserweight, Heavyweight");
         }
 
-        // Generic message for other JSON parse errors
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Malformed JSON request");
     }
 
