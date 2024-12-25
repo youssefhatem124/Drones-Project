@@ -19,7 +19,6 @@ public class TestUtil {
     }
 
     public static DroneDTO getDroneDto() {
-
         DroneDTO droneDTO = new DroneDTO();
         droneDTO.setSerialNumber("DRONE001");
         droneDTO.setModel(DroneModel.LIGHTWEIGHT);
