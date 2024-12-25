@@ -1,10 +1,11 @@
 package com.dronedelivery.mapper;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.dronedelivery.dto.MedicationDTO;
 import com.dronedelivery.model.Medication;
 import com.dronedelivery.utils.TestUtil;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class MedicationMapperTest {
 

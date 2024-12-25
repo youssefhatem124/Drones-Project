@@ -3,7 +3,9 @@ package com.dronedelivery.model;
 import com.dronedelivery.common.enums.DroneModel;
 import com.dronedelivery.common.enums.DroneState;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @AllArgsConstructor

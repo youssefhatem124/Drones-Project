@@ -1,16 +1,16 @@
 package com.dronedelivery.service;
 
-import com.dronedelivery.exception.DroneNotFoundException;
-import com.dronedelivery.exception.ValidationException;
+import com.dronedelivery.common.enums.DroneState;
 import com.dronedelivery.dto.DroneDTO;
 import com.dronedelivery.dto.MedicationDTO;
+import com.dronedelivery.exception.DroneNotFoundException;
+import com.dronedelivery.exception.ValidationException;
 import com.dronedelivery.mapper.DroneMapper;
 import com.dronedelivery.mapper.MedicationMapper;
 import com.dronedelivery.model.Drone;
 import com.dronedelivery.model.Medication;
 import com.dronedelivery.repository.DroneRepository;
 import com.dronedelivery.repository.MedicationRepository;
-import com.dronedelivery.common.enums.DroneState;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,7 +54,7 @@ public class DroneService {
                 .mapToDouble(MedicationDTO::getWeight)
                 .sum();
 
-        if ( newWeight > drone.getWeightLimit()) {
+        if (newWeight > drone.getWeightLimit()) {
             throw new ValidationException("Total weight exceeds drone capacity");
         }
 

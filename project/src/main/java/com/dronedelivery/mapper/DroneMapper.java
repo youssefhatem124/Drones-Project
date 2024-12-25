@@ -4,6 +4,7 @@ import com.dronedelivery.dto.DroneDTO;
 import com.dronedelivery.model.Drone;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
+
 @Mapper
 public interface DroneMapper {
 
@@ -11,5 +12,5 @@ public interface DroneMapper {
 
     DroneDTO entityToDTO(Drone drone);
 
-    Drone toEntity(DroneDTO dto) ;
+    Drone toEntity(DroneDTO dto);
 }

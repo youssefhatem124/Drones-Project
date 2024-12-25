@@ -8,16 +8,17 @@ import com.dronedelivery.model.Drone;
 import com.dronedelivery.model.Medication;
 
 public class TestUtil {
-    public static Drone getDrone(){
-       Drone drone = new Drone();
+    public static Drone getDrone() {
+        Drone drone = new Drone();
         drone.setSerialNumber("DRONE001");
         drone.setModel(DroneModel.LIGHTWEIGHT);
         drone.setBatteryCapacity(100);
         drone.setWeightLimit(500.0);
         drone.setState(DroneState.IDLE);
-         return drone;
+        return drone;
     }
-    public static DroneDTO getDroneDto(){
+
+    public static DroneDTO getDroneDto() {
 
         DroneDTO droneDTO = new DroneDTO();
         droneDTO.setSerialNumber("DRONE001");
@@ -27,7 +28,8 @@ public class TestUtil {
         droneDTO.setState(DroneState.IDLE);
         return droneDTO;
     }
-    public static Medication getMedication(){
+
+    public static Medication getMedication() {
         Medication medication = new Medication();
         medication.setId(1L);
         medication.setName("Medication1");
@@ -35,7 +37,8 @@ public class TestUtil {
         medication.setCode("MED001");
         return medication;
     }
-    public static MedicationDTO getMedicationDto(){
+
+    public static MedicationDTO getMedicationDto() {
         MedicationDTO medication = new MedicationDTO();
         medication.setName("TEST");
         medication.setCode("CODE1");

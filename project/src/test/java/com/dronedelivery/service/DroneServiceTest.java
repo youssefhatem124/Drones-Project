@@ -12,7 +12,8 @@ import com.dronedelivery.repository.MedicationRepository;
 import com.dronedelivery.utils.TestUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
@@ -31,6 +32,7 @@ class DroneServiceTest {
     private MedicationRepository medicationRepository;
     @InjectMocks
     private DroneService droneService;
+
     @Test
     void registerDrone_ShouldSaveAndReturnDrone() {
         DroneDTO droneDTO = TestUtil.getDroneDto();
@@ -73,7 +75,7 @@ class DroneServiceTest {
     @Test
     void loadDrone_ShouldThrowValidationException_WhenBatteryIsLow() {
         Drone drone = TestUtil.getDrone();
-        MedicationDTO medicationDTO =TestUtil.getMedicationDto();
+        MedicationDTO medicationDTO = TestUtil.getMedicationDto();
         drone.setBatteryCapacity(20);
         when(droneRepository.findById(anyLong())).thenReturn(Optional.of(drone));
 
@@ -104,17 +106,18 @@ class DroneServiceTest {
 
         assertEquals(1, availableDrones.size());
         verify(droneRepository, times(1))
-                .findByBatteryCapacityGreaterThanAndState(25, DroneState.IDLE);}
+                .findByBatteryCapacityGreaterThanAndState(25, DroneState.IDLE);
+    }
 
     @Test
     void getDroneBatteryLevel_ShouldReturnBatteryLevel() {
-        Drone drone  = TestUtil.getDrone();
+        Drone drone = TestUtil.getDrone();
         when(droneRepository.findById(1L)).thenReturn(Optional.of(drone));
 
         Integer batteryLevel = droneService.getDroneBatteryLevel(1L);
 
         assertEquals(100, batteryLevel);
-        verify(droneRepository,times(1)).findById(1L);
+        verify(droneRepository, times(1)).findById(1L);
     }
 
     @Test

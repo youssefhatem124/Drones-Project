@@ -4,6 +4,7 @@ import com.dronedelivery.common.enums.DroneModel;
 import com.dronedelivery.common.enums.DroneState;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+
 @Data
 public class DroneDTO {
 

@@ -1,6 +1,5 @@
 package com.dronedelivery.config;
 
-import com.dronedelivery.dto.DroneDTO;
 import com.dronedelivery.common.enums.DroneModel;
 import com.dronedelivery.common.enums.DroneState;
 import com.dronedelivery.model.Drone;

@@ -10,11 +10,12 @@ import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 @ControllerAdvice
 public class DroneExceptionHandler {
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    @ExceptionHandler({MethodArgumentNotValidException.class, HandlerMethodValidationException.class})
+    public ResponseEntity<ErrorResponse> handleArgumentNotValid(Exception ex) {
         ErrorResponse response = ErrorResponse.create(ex, HttpStatus.BAD_REQUEST, "Input not valid");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
@@ -37,15 +38,15 @@ public class DroneExceptionHandler {
         ErrorResponse response = ErrorResponse.create(ex, HttpStatus.NOT_FOUND, ex.getMessage());
         if (message != null && message.contains("com.dronedelivery.common.enums.DroneState")) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(ErrorResponse.create(ex,HttpStatus.BAD_REQUEST,"Invalid value provided for DroneState. Accepted values are: IDLE, LOADING, LOADED, DELIVERING, DELIVERED, RETURNING"));
+                    .body(ErrorResponse.create(ex, HttpStatus.BAD_REQUEST, "Invalid value provided for DroneState. Accepted values are: IDLE, LOADING, LOADED, DELIVERING, DELIVERED, RETURNING"));
         }
 
         if (message != null && message.contains("com.dronedelivery.common.enums.DroneModel")) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(ErrorResponse.create(ex,HttpStatus.BAD_REQUEST,"Invalid value provided for DroneModel. Accepted values are: Lightweight, Middleweight, Cruiserweight, Heavyweight"));
+                    .body(ErrorResponse.create(ex, HttpStatus.BAD_REQUEST, "Invalid value provided for DroneModel. Accepted values are: Lightweight, Middleweight, Cruiserweight, Heavyweight"));
         }
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.create(ex,HttpStatus.BAD_REQUEST,"Malformed JSON request"));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.create(ex, HttpStatus.BAD_REQUEST, "Malformed JSON request"));
     }
 
     @ExceptionHandler(Exception.class)

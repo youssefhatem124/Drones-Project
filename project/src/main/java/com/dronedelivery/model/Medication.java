@@ -1,6 +1,5 @@
 package com.dronedelivery.model;
 
-import com.dronedelivery.dto.DroneDTO;
 import jakarta.persistence.*;
 import lombok.Data;
 

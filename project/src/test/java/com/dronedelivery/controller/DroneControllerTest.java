@@ -13,13 +13,16 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(DroneController.class)
@@ -45,6 +48,30 @@ class DroneControllerTest {
                 .andExpect(jsonPath("$.id").value(drone.getId()))
                 .andExpect(jsonPath("$.batteryCapacity").value(drone.getBatteryCapacity()))
                 .andExpect(jsonPath("$.weightLimit").value(drone.getWeightLimit()));
+    }
+
+    @Test
+    void registerDrone_WithInvalidDroneModel_ReturnsError() throws Exception {
+        // Arrange
+        String invalidPayload = """
+                {
+                    "batteryCapacity": 100,
+                    "serialNumber":"SERIAL1",
+                    "state": "IDLE",
+                    "weightLimit": "500",
+                    "model": "INVALID_MODEL"
+                }
+                """;
+
+        // Act
+        MvcResult result = mockMvc.perform(post("/api/drones")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(invalidPayload))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+        // Assert
+        String response = result.getResponse().getContentAsString();
+        assertTrue(response.contains("Invalid value provided for DroneModel"));
     }
 
     @Test
@@ -109,6 +136,16 @@ class DroneControllerTest {
 
     @Test
     void loadDrone_ShouldReturnBadRequest_WhenValidationFails() throws Exception {
+        MedicationDTO medication = TestUtil.getMedicationDto();
+        medication.setCode("code1");
+        mockMvc.perform(post("/api/drones/1/load")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(List.of(medication))))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void loadDrone_ShouldReturnBadRequest_WhenBatteryIsLow() throws Exception {
         MedicationDTO medication = TestUtil.getMedicationDto();
         when(droneService.loadDrone(anyLong(), any(List.class)))
                 .thenThrow(new ValidationException("Battery too low"));
