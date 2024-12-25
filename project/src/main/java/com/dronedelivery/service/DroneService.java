@@ -79,7 +79,7 @@ public class DroneService {
 
     public List<DroneDTO> getAvailableDrones() {
         // Retrieve drones that meet the criteria, convert them to DTOs, and return
-        return droneRepository.findByBatteryCapacityGreaterThanAndState(25, DroneState.IDLE).stream()
+        return droneRepository.findByBatteryCapacityGreaterThanAndState(24, DroneState.IDLE).stream()
                 .map(DroneMapper.INSTANCE::entityToDTO)
                 .collect(Collectors.toList());
     }
