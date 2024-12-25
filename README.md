@@ -39,7 +39,7 @@ The application implements the following APIs:
 
 ### 1. Build the Application
 
-Generate the JAR file by running the following Maven command:
+Navigate to project folder then Generate the JAR file by running the following Maven command:
 
 ```bash
 mvn clean install

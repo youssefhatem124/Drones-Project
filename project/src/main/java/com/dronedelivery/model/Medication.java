@@ -17,6 +17,7 @@ public class Medication {
 
     private String code;
 
+    @Column(columnDefinition = "TEXT")
     private String image;
 
     @ManyToOne

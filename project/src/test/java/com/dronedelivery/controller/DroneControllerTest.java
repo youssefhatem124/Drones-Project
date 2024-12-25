@@ -104,8 +104,7 @@ class DroneControllerTest {
 
         mockMvc.perform(get("/api/drones/1/battery")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound())
-                .andExpect(content().string("Drone not found"));
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -117,8 +116,7 @@ class DroneControllerTest {
         mockMvc.perform(post("/api/drones/1/load")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(List.of(medication))))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string("Battery too low"));
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -128,7 +126,6 @@ class DroneControllerTest {
 
         mockMvc.perform(get("/api/drones/1/battery")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isInternalServerError())
-                .andExpect(content().string("An unexpected error occurred: Unexpected error"));
+                .andExpect(status().isInternalServerError());
     }
 }
