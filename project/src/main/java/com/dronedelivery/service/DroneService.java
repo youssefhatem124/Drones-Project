@@ -38,14 +38,7 @@ public class DroneService {
         // Retrieve the drone entity or throw an exception if not found
         Drone drone = droneRepository.findById(droneId)
                 .orElseThrow(() -> new DroneNotFoundException("Drone not found"));
-        // Check if the drone's battery capacity is above the threshold
-        if (drone.getBatteryCapacity() < 25) {
-            throw new ValidationException("Cannot load drone: battery level below 25%");
-        }
-        if (drone.getState() != DroneState.IDLE) {
-            throw new ValidationException("Drone is not available for loading");
-        }
-
+        checkDroneValidity(drone);
         // Calculate the total weight of existing and new medications
         double newWeight = newMedications.stream()
                 .mapToDouble(MedicationDTO::getWeight)
@@ -54,21 +47,27 @@ public class DroneService {
         if (newWeight > drone.getWeightLimit()) {
             throw new ValidationException("Total weight exceeds drone capacity");
         }
-
         // Update drone state to LOADING
         drone.setState(DroneState.LOADING);
-
         // Convert new medications from DTO to entity, set their drone, and save them
         List<Medication> medicationsToSave = newMedications.stream()
                 .map(MedicationMapper.INSTANCE::toEntity)
                 .peek(medication -> medication.setDrone(drone))
                 .collect(Collectors.toList());
         medicationRepository.saveAll(medicationsToSave);
-
         // Update drone state to LOADED and save it
         drone.setState(DroneState.LOADED);
         Drone updatedDrone = droneRepository.save(drone);
         return DroneMapper.INSTANCE.entityToDTO(updatedDrone);
+    }
+
+    private void checkDroneValidity(Drone drone) {
+        if (drone.getBatteryCapacity() < 25) {
+            throw new ValidationException("Cannot load drone: battery level below 25%");
+        }
+        if (drone.getState() != DroneState.IDLE) {
+            throw new ValidationException("Drone is not available for loading");
+        }
     }
 
     public List<MedicationDTO> getLoadedMedications(Long droneId) {
