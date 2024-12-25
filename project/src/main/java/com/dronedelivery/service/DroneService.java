@@ -28,7 +28,6 @@ public class DroneService {
     }
 
     public DroneDTO registerDrone(DroneDTO inputDrone) {
-        // Convert DTO to entity, save it, and convert the saved entity back to DTO
         Drone drone = DroneMapper.INSTANCE.toEntity(inputDrone);
         Drone savedDrone = droneRepository.save(drone);
         return DroneMapper.INSTANCE.entityToDTO(savedDrone);
@@ -46,8 +45,6 @@ public class DroneService {
         if (drone.getState() != DroneState.IDLE) {
             throw new ValidationException("Drone is not available for loading");
         }
-
-        // Retrieve existing medications already loaded on the drone
 
         // Calculate the total weight of existing and new medications
         double newWeight = newMedications.stream()
