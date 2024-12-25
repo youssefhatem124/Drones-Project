@@ -10,6 +10,7 @@ import com.dronedelivery.model.Medication;
 import com.dronedelivery.repository.DroneRepository;
 import com.dronedelivery.repository.MedicationRepository;
 import com.dronedelivery.utils.TestUtil;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -58,6 +59,30 @@ class DroneServiceTest {
         assertEquals(DroneState.LOADED, loadedDrone.getState());
         verify(droneRepository, times(1)).findById(1L);
         verify(droneRepository, times(1)).save(drone);
+    }
+
+    @Test
+    void loadDrone_ShouldReturnValidationException_WhenStateIsNotIdle() {
+        Drone drone = TestUtil.getDrone();
+        drone.setState(DroneState.LOADED);
+        MedicationDTO medicationDTO = TestUtil.getMedicationDto();
+        when(droneRepository.findById(anyLong())).thenReturn(Optional.of(drone));
+
+        Assertions.assertThrows(ValidationException.class, () ->
+                droneService.loadDrone(1L, List.of(medicationDTO)));
+
+    }
+
+    @Test
+    void loadDrone_ShouldThrowValidationException_WhenMedicationsWeightLimitExceedDroneCapacity() {
+        MedicationDTO medicationDTO = TestUtil.getMedicationDto();
+        Drone drone = TestUtil.getDrone();
+        drone.setWeightLimit(400.0);
+        medicationDTO.setWeight(600.0);
+        when(droneRepository.findById(anyLong())).thenReturn(Optional.of(drone));
+
+        Assertions.assertThrows(ValidationException.class, () ->
+                droneService.loadDrone(1L, List.of(medicationDTO)));
     }
 
     @Test
